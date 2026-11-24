@@ -1,14 +1,25 @@
 {
-    "name": "@arco-design/mobile-vue",
-    "version": "0.0.0",
+    "name": "@crayon-hua/arco-design-mobile-vue",
+    "version": "0.1.0-alpha.0",
     "description": "",
-    "main": "cjs/index.js",
-    "module": "esm/index.js",
+    "main": "dist/index.cjs",
+    "module": "dist/index.mjs",
+    "exports": {
+        ".": {
+            "import": "./dist/index.mjs",
+            "require": "./dist/index.cjs"
+        },
+        "./style.css": "./dist/style.css",
+        "./tools/flexible": "./tools/flexible.js",
+        "./tools/touch2mouse": "./tools/touch2mouse.js"
+    },
+    "files": [
+        "dist",
+        "tools",
+        "LICENSE"
+    ],
     "scripts": {
-        "prebuild": "node ../../scripts/build/pre-build.js",
-        "build": "rimraf esm/* umd/* cjs/* && gulp build && npm run dist",
-        "dist": "rimraf dist/* && cd ../../ && node packages/arcodesign-vue/rollup.lib.js",
-        "prepublishOnly": "npm run build"
+        "build": "vite build --config vite.lib.config.ts"
     },
     "author": "taoyiyue@bytedance.com",
     "license": "MIT",

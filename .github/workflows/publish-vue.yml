@@ -1,0 +1,53 @@
+name: Publish Vue package to npm
+
+on:
+  push:
+    tags:
+      - 'vue-v*'
+
+permissions:
+  contents: read
+
+jobs:
+  publish:
+    if: github.repository == 'Crayon-hua/arco-design-mobile'
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      id-token: write
+    defaults:
+      run:
+        shell: bash
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '24'
+          registry-url: https://registry.npmjs.org
+      - name: Verify release tag
+        run: |
+          version=$(node -p "require('./packages/arcodesign-vue/package.json').version")
+          test "$GITHUB_REF_NAME" = "vue-v$version"
+      - name: Install build and package dependencies
+        run: |
+          npm ci --legacy-peer-deps --ignore-scripts
+          npm ci --prefix packages/arcodesign-vue --legacy-peer-deps --ignore-scripts
+      - name: Build Vue library
+        run: npm run build --prefix packages/arcodesign-vue
+      - name: Pack and verify package
+        working-directory: packages/arcodesign-vue
+        run: |
+          test -s dist/index.cjs
+          test -s dist/index.mjs
+          test -s dist/style.css
+          npm pack --ignore-scripts --pack-destination "$RUNNER_TEMP"
+      - name: Publish to npm
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+        run: |
+          version=$(node -p "require('./packages/arcodesign-vue/package.json').version")
+          dist_tag=latest
+          if [[ "$version" == *-* ]]; then
+            dist_tag=next
+          fi
+          npm publish "$RUNNER_TEMP/crayon-hua-arco-design-mobile-vue-$version.tgz" --access public --tag "$dist_tag" --ignore-scripts
