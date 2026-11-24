@@ -6,11 +6,11 @@ Follow the steps below to quickly get started using the component library.
 ## Installation
 
 ```
-npm install @crayon-hua/arco-design-mobile-vue@next
+npm install @ihxy/arco-design-mobile-vue@next
 ```
 
 ```js
-import '@crayon-hua/arco-design-mobile-vue/style.css';
+import '@ihxy/arco-design-mobile-vue/style.css';
 ```
 
 ## Project Dependencies
@@ -26,7 +26,7 @@ import '@crayon-hua/arco-design-mobile-vue/style.css';
 The style uses `rem` for self-adaptation (@base-font-size: 50px). Please make sure that the project has introduced `flexible.js` or other tool functions that can set the basic font size for html according to the screen size. You can also import flexible.js provided in this component library:
 
 ```js
-import setRootPixel from '@crayon-hua/arco-design-mobile-vue/tools/flexible';
+import setRootPixel from '@ihxy/arco-design-mobile-vue/tools/flexible';
 
 setRootPixel();
 ```
@@ -57,5 +57,5 @@ lessOptions: {
 Only touch-related events are monitored and processed in the component. If you need to use the component on the PC side, you can import `touch2mouse.js` provided by this component library to be compatible with mouse event processing:
 
 ```js
-import '@crayon-hua/arco-design-mobile-vue/tools/touch2mouse';
+import '@ihxy/arco-design-mobile-vue/tools/touch2mouse';
 ```

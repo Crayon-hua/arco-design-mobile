@@ -3,7 +3,7 @@ name: Publish Vue package to npm
 on:
   push:
     tags:
-      - 'vue-v*'
+      - 'ihxy-vue-v*'
 
 permissions:
   contents: read
@@ -27,7 +27,7 @@ jobs:
       - name: Verify release tag
         run: |
           version=$(node -p "require('./packages/arcodesign-vue/package.json').version")
-          test "$GITHUB_REF_NAME" = "vue-v$version"
+          test "$GITHUB_REF_NAME" = "ihxy-vue-v$version"
       - name: Install build and package dependencies
         run: |
           npm ci --legacy-peer-deps --ignore-scripts
@@ -40,7 +40,8 @@ jobs:
           test -s dist/index.cjs
           test -s dist/index.mjs
           test -s dist/style.css
-          npm pack --ignore-scripts --pack-destination "$RUNNER_TEMP"
+          tarball=$(npm pack --ignore-scripts --pack-destination "$RUNNER_TEMP")
+          echo "VUE_TARBALL=$RUNNER_TEMP/$tarball" >> "$GITHUB_ENV"
       - name: Publish to npm
         env:
           NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
@@ -50,4 +51,4 @@ jobs:
           if [[ "$version" == *-* ]]; then
             dist_tag=next
           fi
-          npm publish "$RUNNER_TEMP/crayon-hua-arco-design-mobile-vue-$version.tgz" --access public --tag "$dist_tag" --ignore-scripts
+          npm publish "$VUE_TARBALL" --access public --tag "$dist_tag" --ignore-scripts
